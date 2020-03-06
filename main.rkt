@@ -1,0 +1,14 @@
+#lang racket
+(require racket/gui/base)
+(require racket/gui)
+(require pict3d)
+(require racket/include)
+(include "Logic/cubeDrawer.rkt")
+
+
+(define frame (new frame% [label "Test"] [width 800] [height 600]))
+(define canvas (new pict3d-canvas%
+                    [parent frame]
+                    [pict3d (combine cubo
+                                     (light (pos 1 1 1)))]))
+(send frame show #t)
