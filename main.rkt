@@ -4,11 +4,12 @@
 (require pict3d)
 (require racket/include)
 (include "Logic/cubeDrawer.rkt")
+(include "Graphics/mainWindow.rkt")
 
 
-(define frame (new frame% [label "Test"] [width 800] [height 600]))
-(define canvas (new pict3d-canvas%
-                    [parent frame]
-                    [pict3d (combine cubo
-                                     (light (pos 1 1 1)))]))
+(define frame (new frame% [label "Rubik Simulator"] [width 800] [height 800]))
+
+(CanvasCube frame)
+
+
 (send frame show #t)
