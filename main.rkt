@@ -95,6 +95,6 @@
             ))
 
 (current-pict3d-background (rgba "white"))
-(current-pict3d-fov 118)
+(current-pict3d-fov 90)
 
 (send mainFrame show #t)
