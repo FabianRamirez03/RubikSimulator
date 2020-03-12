@@ -10,6 +10,7 @@
 (define blackBackGround (make-object bitmap% "Assets/blackBackground.png"))
 (define logo (make-object bitmap% "Assets/logo.png"))
 
+(define (titleFont size)  (make-object font% size 'modern 'normal 'bold))
 
 ;Blank bitmap for resize
 (define bitmap-blank
@@ -33,6 +34,7 @@
                    (send dc draw-bitmap bmp 0 0)
                    (or (send dc get-bitmap) (bitmap-blank)))])]))
 
+;;Main Window Structure  _________________________________________________________________________
 (define mainFrame (new frame%
                        [label "Rubik Simulator"]
                        [width 1400]
@@ -59,11 +61,12 @@
 (define leftPanel
   (new vertical-panel%
        [parent leftColumn]
-       [alignment '(left center)]
+       [alignment '(center top)]
    )
 )
 
 
+;;Canvas Drawers________________________________________________________
 
 ; Draws menu elements in canvas
 (define (drawMenu canvas dc)
@@ -73,8 +76,6 @@
   ;;(send dc draw-bitmap (bitmap-scale logo 0.55) 0 10)
   )
 
-
-
 (define CanvasCube
   (new pict3d-canvas%
                     [parent cubeColumn]
@@ -83,16 +84,12 @@
                             ]
                     ))
 
+;;Main window Widgets 
+(new message% 	[label "Rubik Simulator"]	 
+   	 	[parent leftPanel]
+                [font (titleFont 60)])
 
-(define CanvasMenu
-  (new canvas%
-                    [parent leftPanel]
-                    [paint-callback drawMenu]
-                    ))
 
-(define makeCubeBT (new button% [parent leftPanel]
-             [label (bitmap-scale logo 0.1)]
-            ))
 
 (current-pict3d-background (rgba "white"))
 (current-pict3d-fov 90)
