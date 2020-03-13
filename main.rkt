@@ -37,61 +37,146 @@
 ;;Main Window Structure  _________________________________________________________________________
 (define mainFrame (new frame%
                        [label "Rubik Simulator"]
-                       [width 1400]
-                       [height 800]
+                       [width 650]
+                       [height 680]
                        [x 60]
                        [y 20]
                        [style '(no-resize-border)]))
 
-(define row
+
+;;Panel que contiene el titulo
+(define titlePanel
+  (new vertical-panel%
+       [parent mainFrame]
+       [style '(border)]
+       [stretchable-height #f]
+       ;;[alignment ('center 'top)]
+       ))
+;;Panel que contiene los botones para mover las columnas hacia abajo
+(define topRow
   (new horizontal-panel%
        [parent mainFrame]
+       [style '(border)]
+       [alignment '(left center)]
+       ;;[alignment ('center 'top)]
        ))
-
+;;Panel que contiene las tres columnas del medio 
+(define midRow
+  (new horizontal-panel%
+       [parent mainFrame]
+       [style '(border)]
+       [min-height 400]
+       [min-width 600]
+       [stretchable-width #f]	 
+       [stretchable-height #f]
+       ;;[alignment ('center 'top)]
+       ))
+;;Panel que contiene los botones para mover las filas hacia la derecha
 (define leftColumn
-  (new horizontal-panel%
-       [parent row]
-       ))
-
-(define cubeColumn
-  (new horizontal-panel%
-       [parent row]
-       ))
-
-(define leftPanel
   (new vertical-panel%
-       [parent leftColumn]
-       [alignment '(center top)]
+       [parent midRow]
+       [min-width 100]
+       [stretchable-width #f]
+       [style '(border)]
+       [alignment '(right center)]
+       ))
+;;Panel que contiene el cubo
+(define cubeColumn
+  (new vertical-panel%
+       [parent midRow]
+       [min-width 450]
+       [stretchable-width #f]
+       [style '(border)]
+       ;;[alignment ('center 'center)]
+       ))
+;;;;Panel que contiene los botones para mover las filas hacia la izquierda
+(define rightColumn
+  (new vertical-panel%
+       [parent midRow]
+       [min-width 100]
+       [stretchable-width #f]
+       [style '(border)]
+       [alignment '(left center)]
+       ))
+;;Panel que contiene los botones para mover las columnas hacia arriba
+(define bottomRow
+  (new horizontal-panel%
+       [parent mainFrame]
+       [style '(border)]
+       [alignment '(center center)]
    )
 )
+
+(define leftTopCorner
+  (new vertical-panel%
+       [parent topRow]
+       [min-width 100]
+       [stretchable-width #f]
+       [style '(border)]
+))
+
+(define topRowMain
+  (new vertical-panel%
+       [parent topRow]
+       [min-width 450]
+       [stretchable-width #f]
+       [style '(border)]
+))
+
+(define rightTopCorner
+  (new vertical-panel%
+       [parent topRow]
+       [min-width 100]
+       [stretchable-width #f]
+       [style '(border)]
+))
+
+(define leftBottomCorner
+  (new vertical-panel%
+       [parent bottomRow]
+       [min-width 100]
+       [stretchable-width #f]
+       [style '(border)]
+))
+
+(define bottomRowMain
+  (new vertical-panel%
+       [parent bottomRow]
+       [min-width 450]
+       [stretchable-width #f]
+       [style '(border)]
+))
+(define rightbottomCorner
+  (new vertical-panel%
+       [parent bottomRow]
+       [min-width 100]
+       [stretchable-width #f]
+       [style '(border)]
+))
 
 
 ;;Canvas Drawers________________________________________________________
 
 ; Draws menu elements in canvas
-(define (drawMenu canvas dc)
+(define (drawCube canvas dc)
   (send dc set-scale 2 2)
   (send dc draw-bitmap  cubeBitMap 0 0)
-  ;;(send dc set-background "yellow")
-  ;;(send dc draw-bitmap (bitmap-scale logo 0.55) 0 10)
-  )
+)
 
-(define CanvasCube
-  (new pict3d-canvas%
-                    [parent cubeColumn]
-                    [pict3d (combine cubo
-                                     (light (pos 1 1 1)))
-                            ]
-                    ))
+(define canvasCubeBitMap
+  (new canvas% [parent cubeColumn]
+               [paint-callback drawCube]
+       ))
+
 
 ;;Main window Widgets 
 (new message% 	[label "Rubik Simulator"]	 
-   	 	[parent leftPanel]
-                [font (titleFont 60)])
+   	 	[parent titlePanel]
+                [font (titleFont 50)])
 
 
 
 (current-pict3d-background (rgba "white"))
-(current-pict3d-fov 90)
+(current-pict3d-fov 10)
 
 (send mainFrame show #t)

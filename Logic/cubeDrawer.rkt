@@ -136,19 +136,19 @@
              (cube (pos -0.29 0 0) 0.418))
   )
 
-
-(define cubo
-  (combine frontFace
+(define cubo(parameterize ([current-pict3d-background  (rgba 240 240 240 1)])
+     (combine  frontFace
            rightFace
            leftFace
            topFace
            backFace
            bottomFace
            blackLines
-           (basis 'camera (point-at (pos 0.5 0.5 0.5) (pos 0.2 0.2 0.2)))
-           (light (pos 1 1 1))
- ))
-(define cubeBitMap(parameterize ([current-pict3d-background  (rgba "white" 0)])
+           (basis 'camera (point-at (pos 0.5 0.5 0.5) (pos -0.1 0.13 -0.2)))
+           (light (pos 1 1 1)))))
+
+
+(define cubeBitMap(parameterize ([current-pict3d-background  (rgba 240 240 240 1)])
     (pict3d->bitmap
      (combine cubo
               (light (pos 1 1 1))))))
