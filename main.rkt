@@ -4,6 +4,7 @@
 (require pict3d)
 (require racket/include)
 (include "Logic/cubeDrawer.rkt")
+(include "Logic/CreacionGrafos.rkt")
 
 
 ; Load images
@@ -107,6 +108,7 @@
    )
 )
 
+;;Estructura de la fila superior
 (define leftTopCorner
   (new vertical-panel%
        [parent topRow]
@@ -130,7 +132,7 @@
        [stretchable-width #f]
        [style '(border)]
 ))
-
+;;Estructura de la fila inferior
 (define leftBottomCorner
   (new vertical-panel%
        [parent bottomRow]
@@ -138,7 +140,6 @@
        [stretchable-width #f]
        [style '(border)]
 ))
-
 (define bottomRowMain
   (new vertical-panel%
        [parent bottomRow]
@@ -160,7 +161,7 @@
 ; Draws menu elements in canvas
 (define (drawCube canvas dc)
   (send dc set-scale 2 2)
-  (send dc draw-bitmap  cubeBitMap 0 0)
+  (send dc draw-bitmap  (cubeBitMap2 (create 5)) 0 0)
 )
 
 (define canvasCubeBitMap
@@ -176,7 +177,6 @@
 
 
 
-(current-pict3d-background (rgba "white"))
-(current-pict3d-fov 10)
+
 
 (send mainFrame show #t)
