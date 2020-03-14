@@ -9,12 +9,12 @@
 ;Funcion recursiva para la creacion de las 6 caras del cubo
 (define (createAux number edges)
   (cond ((zero? edges) null)
-        ((equal? edges 6) (cons (createMatrix number 1 'B)(createAux number (- edges 1))))
-        ((equal? edges 5) (cons (createMatrix number 1 'G)(createAux number (- edges 1))))
-        ((equal? edges 4) (cons (createMatrix number 1 'O)(createAux number (- edges 1))))
+        ((equal? edges 6) (cons (createMatrix number 1 'W)(createAux number (- edges 1))))
+        ((equal? edges 5) (cons (createMatrix number 1 'B)(createAux number (- edges 1))))
+        ((equal? edges 4) (cons (createMatrix number 1 'R)(createAux number (- edges 1))))
         ((equal? edges 3) (cons (createMatrix number 1 'Y)(createAux number (- edges 1))))
-        ((equal? edges 2) (cons (createMatrix number 1 'R)(createAux number (- edges 1))))
-        ((equal? edges 1) (cons (createMatrix number 1 'w)(createAux number (- edges 1))))
+        ((equal? edges 2) (cons (createMatrix number 1 'G)(createAux number (- edges 1))))
+        ((equal? edges 1) (cons (createMatrix number 1 'O)(createAux number (- edges 1))))
         )
    )
 ;Funcion recursiva para la creacion de las filas
@@ -127,10 +127,23 @@
        )
   )
 
+;***********************************************Girar cubo****************************************************
 
+(define (girar cube dir)
+  (cond((equal? dir 'U) (moveEdge cube cube '(5 1 3 2 4 6) 1))
+       ((equal? dir 'D) (moveEdge cube cube '(2 4 3 5 1 6) 1))
+       ((equal? dir 'L) (moveEdge cube cube '(3 2 4 6 5 1) 1))
+       ((equal? dir 'R) (moveEdge cube cube '(6 2 1 3 5 4) 1))
+       )
+  )
 
-
-
+(define (moveEdge cubeChange cube List cont)
+  (cond ((null? List) null)
+        ((equal? (car List) cont) (cons (car cubeChange) (moveEdge cube cube (cdr List) 1)))
+        (else(moveEdge (cdr cubeChange) cube List (+ cont 1))
+             )
+        )
+  )
 
 
 
