@@ -111,7 +111,7 @@
 
 (define (rowFrontAux lista width height)
   (cond((null? lista) lista)
-        (else(combine (with-color (rgba (getColor "B")) (cube (pos (offset) (* width (cubesSize)) (* (cubesSize) height)) 1/8)) (rowFrontAux (cdr lista) (+ width 1) height)))
+        (else(combine (with-color (rgba (getColor (caar lista))) (cube (pos (offset) (* width (cubesSize)) (* (cubesSize) height)) 1/8)) (rowFrontAux (cdr lista) (+ width 1) height)))
   )
 )
 

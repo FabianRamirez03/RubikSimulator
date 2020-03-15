@@ -6,12 +6,12 @@
 ;Funcion recursiva para la creacion de las 6 caras del cubo
 (define (createAux number edges)
   (cond ((zero? edges) null)
-        ((equal? edges 6) (cons (createMatrix number 1 'B)(createAux number (- edges 1))))
-        ((equal? edges 5) (cons (createMatrix number 1 'G)(createAux number (- edges 1))))
-        ((equal? edges 4) (cons (createMatrix number 1 'O)(createAux number (- edges 1))))
-        ((equal? edges 3) (cons (createMatrix number 1 'Y)(createAux number (- edges 1))))
-        ((equal? edges 2) (cons (createMatrix number 1 'R)(createAux number (- edges 1))))
-        ((equal? edges 1) (cons (createMatrix number 1 'w)(createAux number (- edges 1))))
+        ((equal? edges 6) (cons (createMatrix number 1 "B")(createAux number (- edges 1))))
+        ((equal? edges 5) (cons (createMatrix number 1 "G")(createAux number (- edges 1))))
+        ((equal? edges 4) (cons (createMatrix number 1 "O")(createAux number (- edges 1))))
+        ((equal? edges 3) (cons (createMatrix number 1 "Y")(createAux number (- edges 1))))
+        ((equal? edges 2) (cons (createMatrix number 1 "R")(createAux number (- edges 1))))
+        ((equal? edges 1) (cons (createMatrix number 1 "w")(createAux number (- edges 1))))
         )
    )
 ;Funcion recursiva para la creacion de las filas
