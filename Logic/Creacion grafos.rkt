@@ -1,35 +1,37 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
 #reader(lib "htdp-advanced-reader.ss" "lang")((modname |Creacion grafos|) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f () #f)))
+(require 2htdp/batch-io)
+(require racket/format)
 ;***********************************Creacion de cubo**********************************
 ;Funcion principal para crear el cubo
 (define (create number)
-  (createAux number 6)
+  (write-file "cube.txt" (~a (createAux number 6)))
   )
 ;Funcion recursiva para la creacion de las 6 caras del cubo
 (define (createAux number edges)
   (cond ((zero? edges) null)
-        ((equal? edges 6) (cons (createMatrix number 1 'W)(createAux number (- edges 1))))
-        ((equal? edges 5) (cons (createMatrix number 1 'B)(createAux number (- edges 1))))
-        ((equal? edges 4) (cons (createMatrix number 1 'R)(createAux number (- edges 1))))
-        ((equal? edges 3) (cons (createMatrix number 1 'Y)(createAux number (- edges 1))))
-        ((equal? edges 2) (cons (createMatrix number 1 'G)(createAux number (- edges 1))))
-        ((equal? edges 1) (cons (createMatrix number 1 'O)(createAux number (- edges 1))))
+        ((equal? edges 1) (cons (createMatrix number number 'W)(createAux number (- edges 1))))
+        ((equal? edges 2) (cons (createMatrix number number 'B)(createAux number (- edges 1))))
+        ((equal? edges 3) (cons (createMatrix number number 'R)(createAux number (- edges 1))))
+        ((equal? edges 4) (cons (createMatrix number number 'Y)(createAux number (- edges 1))))
+        ((equal? edges 5) (cons (createMatrix number number 'G)(createAux number (- edges 1))))
+        ((equal? edges 6) (cons (createMatrix number number 'O)(createAux number (- edges 1))))
         )
    )
 ;Funcion recursiva para la creacion de las filas
 (define (createMatrix numberL number color)
-  (cond ((equal? (+ numberL 1) number) '())
+  (cond ((zero? numberL) '())
         (else
-         (cons (createLine number numberL 1 color) (createMatrix numberL (+ number 1) color))
+         (cons (createLine numberL number color) (createMatrix (- numberL 1) number color))
          )
         )
   )
 ;Funcion recursiva para la creacion de columnas 
-(define (createLine numberL numberC number color)
-  (cond ((equal? (+ numberC 1) number) '())
+(define (createLine numberL number color)
+  (cond ((zero? number) '())
         (else
-         (cons (list color numberL number) (createLine numberL numberC (+ number 1) color))
+         (cons (list  number numberL color) (createLine numberL (- number 1) color))
         )
         )
   )
@@ -46,15 +48,15 @@
   )
 ;**************************************** giro **********************************
 
-(define (rotate cube num dir)
-  (cond ((equal? dir 'U) (sortCube (verticalRead cube num) '(1 5 2 6)))
-        ((equal? dir 'D) (sortCube (verticalRead cube num) '(2 6 1 5)))
-        ((equal? dir 'L) (sortCube (horizontalRead cube num) '(3 6 4 5)))
-        ((equal? dir 'R) (sortCube (horizontalRead cube num) '(4 5 3 6)))
+(define (rotate num dir)
+  (cond ((equal? dir 'U) (write-file "cube.txt" (~a (turn (changeCallC (stringtolistCube (read-1strings "cube.txt") '()) (sortCube (verticalRead (stringtolistCube (read-1strings "cube.txt") '()) num) '(5 1 2 4)) num '(1 2 4 5))))))
+        ((equal? dir 'D) (write-file "cube.txt" (~a (turn (changeCallC (stringtolistCube (read-1strings "cube.txt") '()) (sortCube (verticalRead (stringtolistCube (read-1strings "cube.txt") '()) num) '(2 4 5 1)) num '(1 2 4 5))))))
+        ((equal? dir 'L) (write-file "cube.txt" (~a (turn (changeCallR (stringtolistCube (read-1strings "cube.txt") '()) (sortCube (horizontalRead (stringtolistCube (read-1strings "cube.txt") '()) num) '(3 4 6 1)) num '(1 3 4 6))))))
+        ((equal? dir 'R) (write-file "cube.txt" (~a (turn (changeCallR (stringtolistCube (read-1strings "cube.txt") '()) (sortCube (horizontalRead (stringtolistCube (read-1strings "cube.txt") '()) num) '(6 1 3 4)) num '(1 3 4 6))))))
         (else #f)
         )
   )
-
+;(write-file "cube.txt" (~a (turn (changeCallR (stringtolistCube (read-1strings "cube.txt") '()) (sortCube (horizontalRead (stringtolistCube (read-1strings "cube.txt") '()) 1) '(1 5 2 6)) 1 '(5 2 6 1)))))
 ;Realiza lista con los elementos a mover verticalmente
 (define (verticalRead cube num)
   (cond ((null? cube) null)
@@ -145,6 +147,31 @@
         )
   )
 
+;*****************************************string to list*************************************8
+(define (stringtolistCube List cube)
+  (cond((equal? (car List) ")") cube)
+       ((equal? (car List) " ") (stringtolistCube (cdr List) cube))
+       (else (stringtolistEdge (cdr List) cube '()))))
 
-
-
+(define (stringtolistEdge List cube edge)
+  (cond((equal? (car List) ")") (stringtolistCube (cdr List) (cons edge cube)))
+       ((equal? (car List) " ") (stringtolistEdge (cdr List) cube edge))
+       (else (stringtolistRow (cdr List) cube edge '()))
+       ))
+(define (stringtolistRow List cube edge row)
+  (cond((equal? (car List) ")") (stringtolistEdge (cdr List) cube (cons row edge)))
+       ((equal? (car List) " ") (stringtolistRow (cdr List) cube edge row))
+       (else (stringtolistColumn (cdr List) cube edge row '()))
+  ))
+(define (stringtolistColumn List cube edge row column)
+  (cond((equal? (car List) ")") (stringtolistRow (cdr List) cube edge (cons column row)))
+       ((equal? (car List) " ") (stringtolistColumn (cdr List) cube edge row column))
+       ((equal? (car List) "(") (stringtolistColumn (cdr List) cube edge row column))
+       (else (stringtolistColumn (cdr List) cube edge row (cons (car List) column)))
+  ))
+  
+(define (turn cube)
+  (cond((null? cube) null)
+       ((string? (car cube)) (append (turn (cdr cube)) (list (car cube))))
+       (else (append (turn (cdr cube)) (list (turn (car cube)))))
+  ))
