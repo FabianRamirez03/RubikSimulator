@@ -7,90 +7,17 @@
 (define (-offset) -0.005)
 (define (redius) 1/8)
 
-(define frontFace(combine(with-color (rgba "white") ;;origen (centro)
-             (cube (pos (offset) 0 0) 1/8))                       ;;5
-(with-color (rgba "white") ;;arriba
-             (cube (pos (offset) 0 (cubesSize)) 1/8))              ;;2        1,2,3 coinciden X(offset), Z(Cubesize) 
-(with-color (rgba "white") ;;abajo
-             (cube (pos (offset) 0 (-cubesSize)) 1/8))             ;;8        4,5,6 coinciden X(offset), Z(0)
- (with-color (rgba "white") ;;Derecha 
-             (cube (pos (offset) (cubesSize) 0) 1/8))              ;;6        7,8,9 coinciden en X(Offset, Z(-cubesSize)
- (with-color (rgba "white") ;;Izquierda  
-             (cube (pos (offset) (-cubesSize) 0) 1/8))             ;;4
- (with-color (rgba "white")  ;;Derecha arriba
-             (cube (pos (offset) (cubesSize) (cubesSize)) 1/8))     ;;3
- (with-color (rgba "white")  ;;Derecha abajo
-             (cube (pos (offset)  (cubesSize) (-cubesSize)) 1/8))   ;;9
- (with-color (rgba "white") ;;Izquierda arriba
-             (cube (pos (offset) (-cubesSize) (cubesSize)) 1/8))      ;;1
- (with-color (rgba "white") ;;Izquierda abajo 
-             (cube (pos (offset) (-cubesSize) (-cubesSize)) 1/8))      ;;7
- )) ;;(x y z) -> x es constante en el offset
-
-(define rightFace (combine(with-color (rgba "red") ;;origen (centro)                            ;;5
-             (cube (pos (-cubesSize) (+ (cubesSize) (offset)) 0) 1/8))
-(with-color (rgba "red") ;;arriba
-             (cube (pos (-cubesSize) (+ (cubesSize) (offset)) (cubesSize)) 1/8))                ;;2
-(with-color (rgba "red") ;;abajo
-             (cube (pos (-cubesSize) (+ (cubesSize) (offset)) (-cubesSize)) 1/8))               ;;8   1,2,3 coinciden en Y(+ (cubesSize) (offset)) y en Z(cubesSize)
- (with-color (rgba "red") ;;Derecha 
-             (cube (pos (+ (-cubesSize) (-cubesSize)) (+ (cubesSize) (offset)) 0) 1/8))         ;;6   4,5,6 coinciden en Y(+ (cubesSize) (offset)) y en Z(0)
- (with-color (rgba "red") ;;Izquierda 
-             (cube (pos 0 (+ (cubesSize) (offset)) 0) 1/8))                                     ;;4   7,8,9 coinciden en Y(+ (cubesSize) (offset)) y en Z(-cubesSize)
- (with-color (rgba "red")  ;;Derecha arriba
-             (cube (pos (+ (-cubesSize) (-cubesSize)) (+ (cubesSize) (offset)) (cubesSize)) 1/8)) ;;3
- (with-color (rgba "red")  ;;Derecha abajo
-             (cube (pos (+ (-cubesSize) (-cubesSize)) (+ (cubesSize) (offset)) (-cubesSize)) 1/8)) ;;9
- (with-color (rgba "red") ;;Izquierda arriba
-             (cube (pos 0 (+ (cubesSize) (offset)) (cubesSize)) 1/8))                              ;;1
- (with-color (rgba "red") ;;Izquierda abajo 
-             (cube (pos 0 (+ (cubesSize) (offset)) (-cubesSize)) 1/8))                             ;;7
- ))  ;;(x y z) -> y es constante en 0.255 (+ (cubesSize) (offset))
-
-(define topFace (combine(with-color (rgba "blue") ;;origen (centro)
-             (cube (pos (-cubesSize) 0 (+ (cubesSize) (offset))) 1/8))                            ;;5
-(with-color (rgba "blue") ;;arriba
-             (cube (pos (+ (-cubesSize) (-cubesSize)) 0 (+ (cubesSize) (offset))) 1/8))           ;;2
-(with-color (rgba "blue") ;;abajo
-             (cube (pos 0 0 (+ (cubesSize) (offset))) 1/8))                                       ;;8
- (with-color (rgba "blue") ;;Derecha                              
-             (cube (pos (-cubesSize) (cubesSize) (+ (cubesSize) (offset))) 1/8))                 ;;6        1 2 3 coinciden en Z(+ (cubesSize) (offset)) y en X(-2 cube size)
- (with-color (rgba "blue") ;;Izquierda 
-             (cube (pos (-cubesSize) (-cubesSize) (+ (cubesSize) (offset))) 1/8))                  ;;4      4 5 6 coinciden en Z(+ (cubesSize) (offset)) y en X(- cube size)
- (with-color (rgba "blue")  ;;Derecha arriba
-             (cube (pos (+ (-cubesSize) (-cubesSize)) (cubesSize) (+ (cubesSize) (offset))) 1/8))   ;;3     7 8 9 coinciden en Z(+ (cubesSize) (offset)) y en X(0)
- (with-color (rgba "blue")  ;;Derecha abajo
-             (cube (pos 0 (cubesSize) (+ (cubesSize) (offset))) 1/8))                              ;;9
- (with-color (rgba "blue") ;;Izquierda arriba
-             (cube (pos (+ (-cubesSize) (-cubesSize)) (-cubesSize) (+ (cubesSize) (offset))) 1/8))  ;;1
- (with-color (rgba "blue") ;;Izquierda abajo 
-             (cube (pos 0 (-cubesSize) (+ (cubesSize) (offset))) 1/8))                             ;;7
- ))  ;;(x y z) -> z es constante en 0.255
-
-
+;;Crea el cuadro negro interior para que se vea las lineas entre cuadros___________________________
 (define blackLines
   (with-color (rgba "black") ;;Lineas del borde 
              (cube (pos -0.29 0 0) 0.418))
   )
 
-(define cubo(parameterize ([current-pict3d-background  (rgba 240 240 240 1)])
-     (combine  frontFace
-           rightFace
-           topFace
-           blackLines
-           (basis 'camera (point-at (pos 0.5 0.5 0.5) (pos -0.1 0.13 -0.2)))
-           (light (pos 1 1 1)))))
-
-
-(define cubeBitMap(parameterize ([current-pict3d-background  (rgba 240 240 240 1)])
-    (pict3d->bitmap
-     (combine cubo
-              (light (pos 1 1 1))))))
-
-
-(define (cubo2 matrix)
+;;Función principal para renderizar el cubo como pict3D
+(define (cubo matrix)
   (cubeMatrix matrix))
 
+;;Funcion auxiliar de la funcion cubo
 (define (cubeMatrix matrix)
      (parameterize ([current-pict3d-background  (rgba 240 240 240 1)])
      (combine
@@ -102,7 +29,7 @@
            (light (pos 1 1 1)))))
 
 
-;;Draw Front Face________________________________________________________________________________________________________________________________________
+;;Dibuja cara frontal________________________________________________________________________________________________________________________________________
 (define (frontFace2 lista width height)
   (cond((null? lista) lista)
         (else (combine (rowFrontAux (car lista) width height) (frontFace2 (cdr lista) -1 (- height 1)))
@@ -117,7 +44,7 @@
 )
 
 
-;;Draw right Face________________________________________________________________________________________________________________________________________
+;;Dibuja cara lateral________________________________________________________________________________________________________________________________________
 
 (define (rightFace2 lista deep height dim)
   (cond((null? lista) lista)
@@ -132,7 +59,7 @@
   )
 )
 
-;;Draw top Face________________________________________________________________________________________________________________________________________
+;;Dibuja cara superior________________________________________________________________________________________________________________________________________
 
 (define (topFace2 lista width deep dim)
   (cond((null? lista) lista)
@@ -159,11 +86,14 @@
     )
  )
 
+;;Crea el bitmap a partir de la pict3D________________________________________________________
 (define (cubeBitMap2 matrix)(parameterize ([current-pict3d-background  (rgba 240 240 240 1)])
     (pict3d->bitmap
-     (combine (cubo2 matrix)
+     (combine (cubo matrix)
               (light (pos 1 1 1))))))
 
+
+;;COnsigue el largo de una lista________________________________________
 (define(lengthList lista)
   (cond((null? lista) 0)
        (else(+ 1 (lengthList(cdr lista))))
@@ -171,6 +101,6 @@
 )
 
 
-
+;;Setea valores para la visualización de la imagen
 (current-pict3d-add-sunlight? #t) 
 (current-pict3d-fov 118)
