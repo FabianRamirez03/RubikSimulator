@@ -161,7 +161,7 @@
 ; Draws menu elements in canvas
 (define (drawCube canvas dc)
   (send dc set-scale 2 2)
-  (send dc draw-bitmap  (cubeBitMap2 (create 5)) 0 0)
+  (send dc draw-bitmap  (cubeBitMap2 (create 4)) 0 0)
 )
 
 (define canvasCubeBitMap

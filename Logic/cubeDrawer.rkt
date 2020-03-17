@@ -48,23 +48,23 @@
  ))  ;;(x y z) -> y es constante en 0.255 (+ (cubesSize) (offset))
 
 (define topFace (combine(with-color (rgba "blue") ;;origen (centro)
-             (cube (pos (-cubesSize) 0 (+ (cubesSize) (offset))) 1/8))
+             (cube (pos (-cubesSize) 0 (+ (cubesSize) (offset))) 1/8))                            ;;5
 (with-color (rgba "blue") ;;arriba
-             (cube (pos (+ (-cubesSize) (-cubesSize)) 0 (+ (cubesSize) (offset))) 1/8))
+             (cube (pos (+ (-cubesSize) (-cubesSize)) 0 (+ (cubesSize) (offset))) 1/8))           ;;2
 (with-color (rgba "blue") ;;abajo
-             (cube (pos 0 0 (+ (cubesSize) (offset))) 1/8))
- (with-color (rgba "blue") ;;Derecha 
-             (cube (pos (-cubesSize) (cubesSize) (+ (cubesSize) (offset))) 1/8))
+             (cube (pos 0 0 (+ (cubesSize) (offset))) 1/8))                                       ;;8
+ (with-color (rgba "blue") ;;Derecha                              
+             (cube (pos (-cubesSize) (cubesSize) (+ (cubesSize) (offset))) 1/8))                 ;;6        1 2 3 coinciden en Z(+ (cubesSize) (offset)) y en X(-2 cube size)
  (with-color (rgba "blue") ;;Izquierda 
-             (cube (pos (-cubesSize) (-cubesSize) (+ (cubesSize) (offset))) 1/8))
+             (cube (pos (-cubesSize) (-cubesSize) (+ (cubesSize) (offset))) 1/8))                  ;;4      4 5 6 coinciden en Z(+ (cubesSize) (offset)) y en X(- cube size)
  (with-color (rgba "blue")  ;;Derecha arriba
-             (cube (pos (+ (-cubesSize) (-cubesSize)) (cubesSize) (+ (cubesSize) (offset))) 1/8))
+             (cube (pos (+ (-cubesSize) (-cubesSize)) (cubesSize) (+ (cubesSize) (offset))) 1/8))   ;;3     7 8 9 coinciden en Z(+ (cubesSize) (offset)) y en X(0)
  (with-color (rgba "blue")  ;;Derecha abajo
-             (cube (pos 0 (cubesSize) (+ (cubesSize) (offset))) 1/8))
+             (cube (pos 0 (cubesSize) (+ (cubesSize) (offset))) 1/8))                              ;;9
  (with-color (rgba "blue") ;;Izquierda arriba
-             (cube (pos (+ (-cubesSize) (-cubesSize)) (-cubesSize) (+ (cubesSize) (offset))) 1/8))
+             (cube (pos (+ (-cubesSize) (-cubesSize)) (-cubesSize) (+ (cubesSize) (offset))) 1/8))  ;;1
  (with-color (rgba "blue") ;;Izquierda abajo 
-             (cube (pos 0 (-cubesSize) (+ (cubesSize) (offset))) 1/8))
+             (cube (pos 0 (-cubesSize) (+ (cubesSize) (offset))) 1/8))                             ;;7
  ))  ;;(x y z) -> z es constante en 0.255
 
 
@@ -95,9 +95,10 @@
      (parameterize ([current-pict3d-background  (rgba 240 240 240 1)])
      (combine
            (frontFace2 (car matrix) -1 1)
-           (rightFace2 (cadr matrix) 0 1)
-           blackLines
-           (basis 'camera (point-at (pos 0.5 0.5 0.5) (pos -0.1 0.13 -0.2)))
+           (rightFace2 (cadr matrix) 0 1 (lengthList matrix))
+           (topFace2 (caddr matrix) -1 (* -1 (- (lengthList (caddr matrix)) 1)) (lengthList (caddr matrix)))
+           ;;blackLines
+           ;;(basis 'camera (point-at (pos 0.5 0.5 0.5) (pos -0.1 0.13 -0.2)))
            (light (pos 1 1 1)))))
 
 
@@ -118,26 +119,43 @@
 
 ;;Draw right Face________________________________________________________________________________________________________________________________________
 
-(define (rightFace2 lista deep height)
+(define (rightFace2 lista deep height dim)
   (cond((null? lista) lista)
-        (else (combine (rowRightAux (car lista) deep height) (rightFace2 (cdr lista) 0 (- height 1)))
+        (else (combine (rowRightAux (car lista) deep height dim) (rightFace2 (cdr lista) 0 (- height 1) dim))
          )
   )
 )
 
-(define (rowRightAux lista deep height)
+(define (rowRightAux lista deep height dim)
   (cond((null? lista) lista)
-        (else(combine (with-color (rgba "white")(cube (pos (* deep (cubesSize)) (+ (cubesSize) (offset)) (* (cubesSize) height)) 1/8)) (rowRightAux (cdr lista) (- deep 1) height)))
+        (else(combine (with-color (rgba (getColor (caar lista)))(cube (pos (* deep (cubesSize)) (+ (offset) (* (cubesSize) (- dim 3))) (* (cubesSize) height)) 1/8)) (rowRightAux (cdr lista) (- deep 1) height dim)))
   )
 )
 
+;;Draw top Face________________________________________________________________________________________________________________________________________
+
+(define (topFace2 lista width deep dim)
+  (cond((null? lista) lista)
+        (else (combine (rowTopAux (car lista) width deep dim)(topFace2 (cdr lista) -1 (+ 1 deep) dim))
+         )
+  )
+)
+
+(define (rowTopAux lista width deep dim)
+  (cond((null? lista) lista)
+        (else(combine (with-color (rgba (getColor (caar lista)))(cube (pos (* deep (cubesSize)) (* (cubesSize) width) (+ (* 1 (cubesSize)) (offset))) 1/8)) (rowTopAux (cdr lista) (+ width 1) deep dim)))
+  )
+)
+
+
+;;Consigue el color de cada recuadro__________________________________________________
 (define (getColor color)
   (cond((equal? color "B") (rgba "blue"))
        ((equal? color "O") (rgba "orange"))
        ((equal? color "R") (rgba "red"))
        ((equal? color "Y") (rgba "yellow"))
        ((equal? color "G") (rgba "green"))
-       ((equal? color "W") ("white"))
+       ((equal? color "W") (rgba "white"))
     )
  )
 
