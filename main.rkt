@@ -38,12 +38,11 @@
 ;;Main Window Structure  _________________________________________________________________________
 (define mainFrame (new frame%
                        [label "Rubik Simulator"]
-                       [width 650]
-                       [height 680]
+                       [width 10]
+                       [height 600]
                        [x 60]
                        [y 20]
                        [style '(no-resize-border)]))
-
 
 ;;Panel que contiene el titulo
 (define titlePanel
@@ -53,108 +52,33 @@
        [stretchable-height #f]
        ;;[alignment ('center 'top)]
        ))
-;;Panel que contiene los botones para mover las columnas hacia abajo
-(define topRow
+;;Panel que contiene el titulo
+(define gamePanel
   (new horizontal-panel%
        [parent mainFrame]
        [style '(border)]
-       [alignment '(left center)]
+       ;;[stretchable-height #f]
        ;;[alignment ('center 'top)]
        ))
-;;Panel que contiene las tres columnas del medio 
-(define midRow
-  (new horizontal-panel%
-       [parent mainFrame]
-       [style '(border)]
-       [min-height 400]
-       [min-width 600]
-       [stretchable-width #f]	 
-       [stretchable-height #f]
-       ;;[alignment ('center 'top)]
-       ))
-;;Panel que contiene los botones para mover las filas hacia la derecha
-(define leftColumn
-  (new vertical-panel%
-       [parent midRow]
-       [min-width 100]
-       [stretchable-width #f]
-       [style '(border)]
-       [alignment '(right center)]
-       ))
+
 ;;Panel que contiene el cubo
 (define cubeColumn
   (new vertical-panel%
-       [parent midRow]
+       [parent gamePanel]
        [min-width 450]
-       [stretchable-width #f]
+       ;;[stretchable-width #t]
        [style '(border)]
        ;;[alignment ('center 'center)]
        ))
-;;;;Panel que contiene los botones para mover las filas hacia la izquierda
-(define rightColumn
+;;Panel que contiene el cubo
+(define controlsColumn
   (new vertical-panel%
-       [parent midRow]
-       [min-width 100]
-       [stretchable-width #f]
+       [parent gamePanel]
+       [min-width 450]
+       ;;[stretchable-width #f]
        [style '(border)]
-       [alignment '(left center)]
+       ;;[alignment ('center 'center)]
        ))
-;;Panel que contiene los botones para mover las columnas hacia arriba
-(define bottomRow
-  (new horizontal-panel%
-       [parent mainFrame]
-       [style '(border)]
-       [alignment '(center center)]
-   )
-)
-
-;;Estructura de la fila superior
-(define leftTopCorner
-  (new vertical-panel%
-       [parent topRow]
-       [min-width 100]
-       [stretchable-width #f]
-       [style '(border)]
-))
-
-(define topRowMain
-  (new vertical-panel%
-       [parent topRow]
-       [min-width 450]
-       [stretchable-width #f]
-       [style '(border)]
-))
-
-(define rightTopCorner
-  (new vertical-panel%
-       [parent topRow]
-       [min-width 100]
-       [stretchable-width #f]
-       [style '(border)]
-))
-;;Estructura de la fila inferior
-(define leftBottomCorner
-  (new vertical-panel%
-       [parent bottomRow]
-       [min-width 100]
-       [stretchable-width #f]
-       [style '(border)]
-))
-(define bottomRowMain
-  (new vertical-panel%
-       [parent bottomRow]
-       [min-width 450]
-       [stretchable-width #f]
-       [style '(border)]
-))
-(define rightbottomCorner
-  (new vertical-panel%
-       [parent bottomRow]
-       [min-width 100]
-       [stretchable-width #f]
-       [style '(border)]
-))
-
 
 ;;Canvas Drawers________________________________________________________
 

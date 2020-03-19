@@ -1,16 +1,17 @@
 (require pict3d)
 (require pict3d/universe)
 
+;;Constanstes utilizadas constantemente en la renderizacion del cubo.
 (define (cubesSize)0.29)
 (define (-cubesSize)-0.29)
 (define (offset) 0.005)
 (define (-offset) -0.005)
-(define (redius) 1/8)
+(define (radius) 1/8)
 
 ;;Crea el cuadro negro interior para que se vea las lineas entre cuadros___________________________
-(define blackLines
+(define (blackLines dim)
   (with-color (rgba "black") ;;Lineas del borde 
-             (cube (pos -0.29 0 0) 0.418))
+             (cube (getCenter dim) (* dim 0.13933)))
   )
 
 ;;Función principal para renderizar el cubo como pict3D
@@ -24,7 +25,7 @@
            (frontFace2 (car matrix) -1 1)
            (rightFace2 (cadr matrix) 0 1 (lengthList (cadr matrix)))
            (topFace2 (caddr matrix) -1 (* -1 (- (lengthList (caddr matrix)) 1)) (lengthList (caddr matrix)))
-           ;;blackLines
+           (blackLines (lengthList (car matrix)))
            ;;(basis 'camera (point-at (pos 0.5 0.5 0.5) (pos -0.1 0.13 -0.2)))
            (light (pos 1 1 1)))))
 
@@ -85,6 +86,23 @@
        ((equal? color "W") (rgba "white"))
     )
  )
+
+
+;;Define las coordenadas del centro del cuadro negro que genera las lineas
+(define (getCenter dim)
+  (cond((equal? dim 0) (pos 0 0 0))
+       ((equal? dim 1) (pos 0 0 0))
+       ((equal? dim 2) (pos -0.15 -0.15 0.14))
+       ((equal? dim 3) (pos -0.29 0 0))
+       ((equal? dim 4) (pos -0.433 0.15 -0.139))
+       ((equal? dim 5) (pos -0.57 0.3 -0.279))
+       ((equal? dim 6) (pos -0.71 0.45 -0.42))
+       ((equal? dim 7) (pos -0.85 0.603 -0.56))
+       ((equal? dim 8) (pos -0.985 0.75 -0.70))
+       ((equal? dim 9) (pos -1.128 0.9 -0.838))
+       ((equal? dim 10) (pos -1.27 1.05 -0.99))
+    )  
+)
 
 ;;Crea el bitmap a partir de la pict3D________________________________________________________
 (define (cubeBitMap2 matrix)(parameterize ([current-pict3d-background  (rgba 240 240 240 1)])
