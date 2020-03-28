@@ -52,7 +52,7 @@
        [stretchable-height #f]
        ;;[alignment ('center 'top)]
        ))
-;;Panel que contiene el titulo
+;;Panel que contiene el juego
 (define gamePanel
   (new horizontal-panel%
        [parent mainFrame]
@@ -70,8 +70,8 @@
        [style '(border)]
        ;;[alignment ('center 'center)]
        ))
-;;Panel que contiene el cubo
-(define controlsColumn
+;;Panel que contiene el menu
+(define menuColumn
   (new vertical-panel%
        [parent gamePanel]
        [min-width 450]
@@ -80,12 +80,59 @@
        ;;[alignment ('center 'center)]
        ))
 
+;;__________________________Paneles de menu____________________________________________
+
+;;espacio superior para centrar el resto del contenido
+(define topBlankRow
+  (new horizontal-panel%
+       [parent menuColumn]
+       [style '(border)]
+       ;;[alignment ('center 'center)]
+))
+;;Contiene el boton para devolver la jugada hecha
+(define reverseRow
+  (new horizontal-panel%
+       [parent menuColumn]
+       [min-height 90]
+       [stretchable-height #f]
+       [style '(border)]
+       ;;[alignment ('center 'center)]
+))
+
+
+;;espacio para decidir el movimiento que se quiere realizar
+(define movesRow
+  (new horizontal-panel%
+       [parent menuColumn]
+       [min-height 90]
+       [stretchable-height #f]
+       [style '(border)]
+       ;;[alignment ('center 'center)]
+))
+
+;;espacio para decidir lo rotacion del cubo que se quiere realizar
+(define rotationRow
+  (new horizontal-panel%
+       [parent menuColumn]
+       [min-height 90]
+       [stretchable-height #f]
+       [style '(border)]
+       ;;[alignment ('center 'center)]
+))
+;;;;espacio inferior para centrar el resto del contenido
+(define bottomBlankRow
+  (new horizontal-panel%
+       [parent menuColumn]
+       [style '(border)]
+       ;;[alignment ('center 'center)]
+))
+
 ;;Canvas Drawers________________________________________________________
 
 ; Draws menu elements in canvas
 (define (drawCube canvas dc)
   (send dc set-scale 2 2)
-  (send dc draw-bitmap  (cubeBitMap2 (create 10)) 0 0)
+  (send dc draw-bitmap  (cubeBitMap2 (create 3)) 0 0)
 )
 
 (define canvasCubeBitMap
