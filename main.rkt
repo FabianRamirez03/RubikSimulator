@@ -11,7 +11,10 @@
 (define blackBackGround (make-object bitmap% "Assets/blackBackground.png"))
 (define logo (make-object bitmap% "Assets/logo.png"))
 
+
+;;Fuentes
 (define (titleFont size)  (make-object font% size 'modern 'normal 'bold))
+(define (menuFont size)  (make-object font% size 'swiss 'normal 'bold))
 
 ;Blank bitmap for resize
 (define bitmap-blank
@@ -91,11 +94,12 @@
 ))
 ;;Contiene el boton para devolver la jugada hecha
 (define reverseRow
-  (new horizontal-panel%
+  (new vertical-panel%
        [parent menuColumn]
-       [min-height 90]
+       [min-height 110]
        [stretchable-height #f]
        [style '(border)]
+       [alignment '(left center)]
        ;;[alignment ('center 'center)]
 ))
 
@@ -104,9 +108,10 @@
 (define movesRow
   (new horizontal-panel%
        [parent menuColumn]
-       [min-height 90]
+       [min-height 110]
        [stretchable-height #f]
        [style '(border)]
+       [alignment '(center center)]
        ;;[alignment ('center 'center)]
 ))
 
@@ -114,18 +119,13 @@
 (define rotationRow
   (new horizontal-panel%
        [parent menuColumn]
-       [min-height 90]
+       [min-height 110]
        [stretchable-height #f]
        [style '(border)]
-       ;;[alignment ('center 'center)]
+       [alignment '(center center)]
 ))
 ;;;;espacio inferior para centrar el resto del contenido
-(define bottomBlankRow
-  (new horizontal-panel%
-       [parent menuColumn]
-       [style '(border)]
-       ;;[alignment ('center 'center)]
-))
+
 
 ;;Canvas Drawers________________________________________________________
 
@@ -141,13 +141,60 @@
        ))
 
 
-;;Main window Widgets 
-(new message% 	[label "Rubik Simulator"]	 
+;;Main window Widgets_________________________________________________
+
+;;Titulo
+(define title(new message% 	[label "Rubik Simulator"]	 
    	 	[parent titlePanel]
-                [font (titleFont 50)])
+                [font (titleFont 50)]))
+;;Boton para un nuevo juego
+(define newGameField (new text-field%
+                        (label "Nuevo Juego:")
+                        (parent topBlankRow)
+                        (init-value "Dimensión")
+                        [font (menuFont 20)]))
+(define newGameButton (new button%
+                    (parent topBlankRow)
+                    (label "Iniciar")
+                    [font (menuFont 20)]))
 
-
-
-
+;;Boton para devolver la jugada
+(define reverseButton (new button%
+                    (parent reverseRow)
+                    (label "Reversa")
+                    [font (menuFont 20)]))
+;;Textfield para introducir la jugada a realizar
+(define movesField (new text-field%
+                        (label "Jugada:")
+                        (parent movesRow)
+                        (init-value "Introduzca el movimiento")
+                        [font (menuFont 20)]))
+;;Boton para realizar movimiento definido en el textField
+(define moveButton (new button%
+                    (parent movesRow)
+                    (label "Mover")
+                    [font (menuFont 20)]))
+;Columna para girar las diferentes caras del cubo
+(define turnLabel (new message%
+                [label "Girar:"]	 
+   	 	[parent rotationRow]
+                [font (menuFont 20)]))
+;;Botones para girar el cubo
+(define turnUpButton (new button%
+                    (parent rotationRow)
+                    (label "Arriba")
+                    [font (menuFont 20)]))
+(define turnDownButton (new button%
+                    (parent rotationRow)
+                    (label "Abajo")
+                    [font (menuFont 20)]))
+(define turnRightButton (new button%
+                    (parent rotationRow)
+                    (label "Derecha")
+                    [font (menuFont 20)]))
+(define turnLeftButton (new button%
+                    (parent rotationRow)
+                    (label "Izquierda")
+                    [font (menuFont 20)]))
 
 (send mainFrame show #t)
