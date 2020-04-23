@@ -1,3 +1,5 @@
+(require 2htdp/batch-io)
+(require racket/format)
 ;***********************************Creacion de cubo**********************************
 ;Funcion principal para crear el cubo
 (define (create number)
@@ -124,9 +126,52 @@
        )
   )
 
+;***********************************************Girar cubo****************************************************
 
+(define (girar cube dir)
+  (cond((equal? dir 'U) (moveEdge cube cube '(5 1 3 2 4 6) 1))
+       ((equal? dir 'D) (moveEdge cube cube '(2 4 3 5 1 6) 1))
+       ((equal? dir 'L) (moveEdge cube cube '(3 2 4 6 5 1) 1))
+       ((equal? dir 'R) (moveEdge cube cube '(6 2 1 3 5 4) 1))
+       )
+  )
 
+(define (moveEdge cubeChange cube List cont)
+  (cond ((null? List) null)
+        ((equal? (car List) cont) (cons (car cubeChange) (moveEdge cube cube (cdr List) 1)))
+        (else(moveEdge (cdr cubeChange) cube List (+ cont 1))
+             )
+        )
+  )
 
+;*****************************************string to list*************************************8
+(define (stringtolistCube List cube)
+  (cond((equal? (car List) ")") cube)
+       ((equal? (car List) " ") (stringtolistCube (cdr List) cube))
+       (else (stringtolistEdge (cdr List) cube '()))))
+
+(define (stringtolistEdge List cube edge)
+  (cond((equal? (car List) ")") (stringtolistCube (cdr List) (cons edge cube)))
+       ((equal? (car List) " ") (stringtolistEdge (cdr List) cube edge))
+       (else (stringtolistRow (cdr List) cube edge '()))
+       ))
+(define (stringtolistRow List cube edge row)
+  (cond((equal? (car List) ")") (stringtolistEdge (cdr List) cube (cons row edge)))
+       ((equal? (car List) " ") (stringtolistRow (cdr List) cube edge row))
+       (else (stringtolistColumn (cdr List) cube edge row '()))
+  ))
+(define (stringtolistColumn List cube edge row column)
+  (cond((equal? (car List) ")") (stringtolistRow (cdr List) cube edge (cons column row)))
+       ((equal? (car List) " ") (stringtolistColumn (cdr List) cube edge row column))
+       ((equal? (car List) "(") (stringtolistColumn (cdr List) cube edge row column))
+       (else (stringtolistColumn (cdr List) cube edge row (cons (car List) column)))
+  ))
+  
+(define (turn cube)
+  (cond((null? cube) null)
+       ((string? (car cube)) (append (turn (cdr cube)) (list (car cube))))
+       (else (append (turn (cdr cube)) (list (turn (car cube)))))
+  ))
 
 
 
