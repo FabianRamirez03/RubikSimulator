@@ -1,4 +1,6 @@
-#lang racket
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-advanced-reader.ss" "lang")((modname main) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f () #f)))
 (require racket/gui/base)
 (require racket/gui)
 (require pict3d)
@@ -158,7 +160,7 @@
 (define newGameButton (new button%
                     (parent topBlankRow)
                     (label "Iniciar")
-                    [callback (lambda (button event) (newCube (string->number(send newGameField get-value))))]
+                    [callback (lambda (button event) (create (string->number(send newGameField get-value))))]
                     [font (menuFont 20)]))
 
 ;;Boton para devolver la jugada
@@ -200,13 +202,5 @@
                     (label "Izquierda")
                     [font (menuFont 20)]))
 
-;Consigue el cubo del .txt
-(define getCube
-  (stringtolistCube  (read-1strings "Logic/cube.txt") '()))
-
-;Crea un nuevo cubo de tamano n
-(define (newCube size)
-  (write-file "Logic/cube.txt" (~a (create size)))
-  )
 
 (send mainFrame show #t)
