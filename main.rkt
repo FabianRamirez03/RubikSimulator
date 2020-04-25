@@ -3,6 +3,8 @@
 (require racket/gui)
 (require pict3d)
 (require racket/include)
+(require 2htdp/batch-io)
+(require racket/format)
 (include "Logic/cubeDrawer.rkt")
 (include "Logic/CreacionGrafos.rkt")
 
@@ -132,7 +134,7 @@
 ; Draws menu elements in canvas
 (define (drawCube canvas dc)
   (send dc set-scale 2 2)
-  (send dc draw-bitmap  (cubeBitMap2 (create 3)) 0 0)
+  (send dc draw-bitmap  (cubeBitMap2 (stringtolistCube  (read-1strings "Logic/cube.txt") '())) 0 0)
 )
 
 (define canvasCubeBitMap
@@ -156,6 +158,7 @@
 (define newGameButton (new button%
                     (parent topBlankRow)
                     (label "Iniciar")
+                    [callback (lambda (button event) (newCube (string->number(send newGameField get-value))))]
                     [font (menuFont 20)]))
 
 ;;Boton para devolver la jugada
@@ -196,5 +199,14 @@
                     (parent rotationRow)
                     (label "Izquierda")
                     [font (menuFont 20)]))
+
+;Consigue el cubo del .txt
+(define getCube
+  (stringtolistCube  (read-1strings "Logic/cube.txt") '()))
+
+;Crea un nuevo cubo de tamano n
+(define (newCube size)
+  (write-file "Logic/cube.txt" (~a (create size)))
+  )
 
 (send mainFrame show #t)
