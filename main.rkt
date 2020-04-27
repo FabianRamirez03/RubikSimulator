@@ -229,39 +229,55 @@
 ;Gira el cubo hacia arriba
 (define (upTwist)
   (girar "U")
+  (writeTwist "U")
   (windowUpdater))
 ;Gira el cubo hacia abajo
 (define (downTwist)
   (girar "D")
+  (writeTwist "D")
   (windowUpdater))
 ;Gira el cubo hacia la derecha
 (define (rightTwist)
   (girar "R")
+  (writeTwist "R")
   (windowUpdater))
 ;Gira el cubo hacia la izquierda
 (define (leftTwist)
   (girar "L")
+  (writeTwist "L")
   (windowUpdater))
 
+;;_________________________________________________REVERSA__________________________________________________
+
+;;Devuelve el ultimo movimiento realizado
 (define (reverse)
   (reverseAux (string-split (car(file->lines "reverse.txt")) #rx"(?<=.)(?=.)"))
   )
 (define (reverseAux moves)
   (cond((equal? (car moves) "V")#f)
-       ((equal? (cadr moves) "U")(downTwist)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
-       ((equal? (cadr moves) "D")(upTwist)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
-       ((equal? (cadr moves) "L")(leftRwist)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
+       ((equal? (cadr moves) "U")(upTwist)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
+       ((equal? (cadr moves) "D")(downTwist)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
+       ((equal? (cadr moves) "L")(leftTwist)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
        ((equal? (cadr moves) "R")(rightTwist)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
        (else (makeMove moves)
              (write-file "reverse.txt" (~a (string-append* (cddr moves)))))
     )
   )
-
+;Invierte el movimiento realizado para regresar al punto inicial
 (define (invertMove move)
   (cond((equal? "I" move) "D")
        ((equal? "D" move) "I")
        ((equal? "A" move) "B")
        ((equal? "B" move) "A")
+    )
+  )
+;Escribe en giro del cubo en el txt en caso de regresar el movimiente
+
+(define (writeTwist dir)
+  (cond((equal? "U" dir) (write-file "reverse.txt" (~a (string-append* "0" "D" (file->lines "reverse.txt")))))
+       ((equal? "D" dir) (write-file "reverse.txt" (~a (string-append* "0" "U" (file->lines "reverse.txt")))))
+       ((equal? "L" dir) (write-file "reverse.txt" (~a (string-append* "0" "R" (file->lines "reverse.txt")))))
+       ((equal? "R" dir) (write-file "reverse.txt" (~a (string-append* "0" "L" (file->lines "reverse.txt")))))
     )
   )
 
