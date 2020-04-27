@@ -1,6 +1,4 @@
-;; The first three lines of this file were inserted by DrRacket. They record metadata
-;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-advanced-reader.ss" "lang")((modname main) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f () #f)))
+#lang Racket
 (require racket/gui/base)
 (require racket/gui)
 (require pict3d)
@@ -160,7 +158,7 @@
 (define newGameButton (new button%
                     (parent topBlankRow)
                     (label "Iniciar")
-                    [callback (lambda (button event) (create (string->number(send newGameField get-value))))]
+                    [callback (lambda (button event) (newGameUpdate))]
                     [font (menuFont 20)]))
 
 ;;Boton para devolver la jugada
@@ -178,6 +176,7 @@
 (define moveButton (new button%
                     (parent movesRow)
                     (label "Mover")
+                    [callback (lambda (button event) (makeMove (splitMove (send movesField get-value))))]
                     [font (menuFont 20)]))
 ;Columna para girar las diferentes caras del cubo
 (define turnLabel (new message%
@@ -188,19 +187,59 @@
 (define turnUpButton (new button%
                     (parent rotationRow)
                     (label "Arriba")
+                    [callback (lambda (button event) (upTwist))]
                     [font (menuFont 20)]))
 (define turnDownButton (new button%
                     (parent rotationRow)
                     (label "Abajo")
+                    [callback (lambda (button event) (downTwist))]
                     [font (menuFont 20)]))
 (define turnRightButton (new button%
                     (parent rotationRow)
                     (label "Derecha")
+                    [callback (lambda (button event) (rightTwist))]
                     [font (menuFont 20)]))
 (define turnLeftButton (new button%
                     (parent rotationRow)
                     (label "Izquierda")
+                    [callback (lambda (button event) (leftTwist))]
                     [font (menuFont 20)]))
+
+;;Actualiza el nuevo juego con un cubo con una nueva dimension
+(define (newGameUpdate)
+  (create (string->number(send newGameField get-value)))
+  (windowUpdater)
+  )
+
+;actualiza la ventana principal
+(define (windowUpdater)
+  (send mainFrame refresh))
+
+;Divide la jugada que se quiere hacer
+(define (splitMove move) (string-split move #rx"(?<=.)(?=.)"))
+
+;;Realiza la modificación del cubo que el usuario decidió hacer
+ (define (makeMove move)
+   (print (cadr move))
+   (rotate (string->number (car move)) (cadr move))
+   (windowUpdater)
+   )
+;Gira el cubo hacia arriba
+(define (upTwist)
+  (girar "U")
+  (windowUpdater))
+;Gira el cubo hacia abajo
+(define (downTwist)
+  (girar "D")
+  (windowUpdater))
+;Gira el cubo hacia la derecha
+(define (rightTwist)
+  (girar "R")
+  (windowUpdater))
+;Gira el cubo hacia la izquierda
+(define (leftTwist)
+  (girar "L")
+  (windowUpdater))
 
 
 (send mainFrame show #t)
