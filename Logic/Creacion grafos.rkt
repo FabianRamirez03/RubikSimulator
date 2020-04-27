@@ -96,7 +96,7 @@
 ;Acomoda el cubo cambiandole la fila a la que le dieron vuelta
 (define (rowChange cube List numChange numList num)
   (cond((null? cube) null)
-       ((equal? numList num) (cons (rChanAux (car List) (car cube) numChange 1 (Length (car cube))) (rowChange (cdr cube) (cdr List) numChange numList (+ num 1))))
+       ((equal? numList num) (cons (rChanAux (car List) (car cube) numChange 1 (+ (Length cube) 1)) (rowChange (cdr cube) (cdr List) numChange numList (+ num 1))))
        (else(cons (car cube) (rowChange (cdr cube) List numChange  numList (+ num 1)))
              )
        )
@@ -118,24 +118,24 @@
 ;Toma la cara a la que se le debe de dar vuelta
 (define (columnChange cube List numChange numList num)
   (cond((null? cube) null)
-       ((equal? numList num) (cons (columnChanAux (car List) (car cube) numChange) (columnChange (cdr cube) (cdr List) numChange numList (+ num 1))))
+       ((equal? numList num) (cons (columnChanAux (car List) (car cube) numChange cube) (columnChange (cdr cube) (cdr List) numChange numList (+ num 1))))
        (else (cons (car cube) (columnChange (cdr cube) List numChange numList (+ num 1))))
        )
   )
 ;Toma cada fila para cambiarle la columna deseada
-(define (columnChanAux List edge numChange)
+(define (columnChanAux List edge numChange cube)
   (cond((null? edge) null)
-       (else(cons (rChanAux (car List) (car edge) numChange 1 (Length edge)) (columnChanAux (cdr List) (cdr edge) numChange)))
+       (else(cons (rChanAux (car List) (car edge) numChange 1 (+ (Length cube) 1)) (columnChanAux (cdr List) (cdr edge) numChange cube)))
        )
   )
 
 ;***********************************************Girar cubo****************************************************
 
-(define (girar cube dir)
-  (cond((equal? dir 'U) (moveEdge cube cube '(5 1 3 2 4 6) 1))
-       ((equal? dir 'D) (moveEdge cube cube '(2 4 3 5 1 6) 1))
-       ((equal? dir 'L) (moveEdge cube cube '(3 2 4 6 5 1) 1))
-       ((equal? dir 'R) (moveEdge cube cube '(6 2 1 3 5 4) 1))
+(define (girar dir)
+  (cond((equal? dir 'U) (write-file "cube.txt" (~a (turn (moveEdge (stringtolistCube (read-1strings "cube.txt") '()) (stringtolistCube (read-1strings "cube.txt") '()) '(5 1 3 2 4 6) 1)))))
+       ((equal? dir 'D) (write-file "cube.txt" (~a (turn (moveEdge (stringtolistCube (read-1strings "cube.txt") '()) (stringtolistCube (read-1strings "cube.txt") '()) '(2 4 3 5 1 6) 1)))))
+       ((equal? dir 'L) (write-file "cube.txt" (~a (turn (moveEdge (stringtolistCube (read-1strings "cube.txt") '()) (stringtolistCube (read-1strings "cube.txt") '()) '(3 2 4 6 5 1) 1)))))
+       ((equal? dir 'R) (write-file "cube.txt" (~a (turn (moveEdge (stringtolistCube (read-1strings "cube.txt") '()) (stringtolistCube (read-1strings "cube.txt") '()) '(6 2 1 3 5 4) 1)))))
        )
   )
 
