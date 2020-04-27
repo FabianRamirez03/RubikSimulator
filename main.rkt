@@ -18,32 +18,10 @@
 (define (titleFont size)  (make-object font% size 'modern 'normal 'bold))
 (define (menuFont size)  (make-object font% size 'swiss 'normal 'bold))
 
-;Blank bitmap for resize
-(define bitmap-blank
-  (lambda [[w 0] [h #false] #:backing-scale [backing-scale 2.0]]
-    (define width  (max 1 (exact-ceiling w)))
-    (define height (max 1 (exact-ceiling (or h w))))
-    (make-bitmap width height #:backing-scale backing-scale)))
-
-;Resize bitmap
-(define bitmap-scale
-  (case-lambda
-    [(bmp scale)
-     (if (= scale 1.0) bmp (bitmap-scale bmp scale scale))]
-    [(bmp scale-x scale-y)
-     (cond [(and (= scale-x 1.0) (= scale-y 1.0)) bmp]
-           [else (let ([w (max 1 (exact-ceiling (* (send bmp get-width) scale-x)))]
-                       [h (max 1 (exact-ceiling (* (send bmp get-height) scale-y)))])
-                   (define dc (make-object bitmap-dc% (bitmap-blank w h)))
-                   (send dc set-smoothing 'aligned)
-                   (send dc set-scale scale-x scale-y)
-                   (send dc draw-bitmap bmp 0 0)
-                   (or (send dc get-bitmap) (bitmap-blank)))])]))
-
 ;;Main Window Structure  _________________________________________________________________________
 (define mainFrame (new frame%
                        [label "Rubik Simulator"]
-                       [width 10]
+                       [width 1100]
                        [height 600]
                        [x 60]
                        [y 20]
@@ -61,7 +39,6 @@
 (define gamePanel
   (new horizontal-panel%
        [parent mainFrame]
-       [style '(border)]
        ;;[stretchable-height #f]
        ;;[alignment ('center 'top)]
        ))
@@ -71,7 +48,6 @@
   (new vertical-panel%
        [parent gamePanel]
        [min-width 450]
-       ;;[stretchable-width #t]
        [style '(border)]
        ;;[alignment ('center 'center)]
        ))
@@ -80,8 +56,9 @@
   (new vertical-panel%
        [parent gamePanel]
        [min-width 450]
-       ;;[stretchable-width #f]
        [style '(border)]
+       ;;[stretchable-width #f]
+
        ;;[alignment ('center 'center)]
        ))
 
@@ -91,7 +68,6 @@
 (define topBlankRow
   (new horizontal-panel%
        [parent menuColumn]
-       [style '(border)]
        ;;[alignment ('center 'center)]
 ))
 ;;Contiene el boton para devolver la jugada hecha
@@ -100,7 +76,7 @@
        [parent menuColumn]
        [min-height 110]
        [stretchable-height #f]
-       [style '(border)]
+
        [alignment '(left center)]
        ;;[alignment ('center 'center)]
 ))
@@ -112,7 +88,6 @@
        [parent menuColumn]
        [min-height 110]
        [stretchable-height #f]
-       [style '(border)]
        [alignment '(center center)]
        ;;[alignment ('center 'center)]
 ))
@@ -123,7 +98,6 @@
        [parent menuColumn]
        [min-height 110]
        [stretchable-height #f]
-       [style '(border)]
        [alignment '(center center)]
 ))
 ;;;;espacio inferior para centrar el resto del contenido
