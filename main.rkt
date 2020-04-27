@@ -165,6 +165,7 @@
 (define reverseButton (new button%
                     (parent reverseRow)
                     (label "Reversa")
+                    [callback (lambda (button event) (reverse))]
                     [font (menuFont 20)]))
 ;;Textfield para introducir la jugada a realizar
 (define movesField (new text-field%
@@ -208,6 +209,7 @@
 ;;Actualiza el nuevo juego con un cubo con una nueva dimension
 (define (newGameUpdate)
   (create (string->number(send newGameField get-value)))
+  (write-file "reverse.txt" (~a "V"))
   (windowUpdater)
   )
 
@@ -221,6 +223,7 @@
 ;;Realiza la modificación del cubo que el usuario decidió hacer
  (define (makeMove move)
    (rotate (string->number (car move)) (cadr move))
+   (write-file "reverse.txt" (~a (string-append* (car move) (invertMove (cadr move)) (file->lines "reverse.txt"))))
    (windowUpdater)
    )
 ;Gira el cubo hacia arriba
@@ -240,5 +243,26 @@
   (girar "L")
   (windowUpdater))
 
+(define (reverse)
+  (reverseAux (string-split (car(file->lines "reverse.txt")) #rx"(?<=.)(?=.)"))
+  )
+(define (reverseAux moves)
+  (cond((equal? (car moves) "V")#f)
+       ((equal? (cadr moves) "U")(downTwist)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
+       ((equal? (cadr moves) "D")(upTwist)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
+       ((equal? (cadr moves) "L")(leftRwist)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
+       ((equal? (cadr moves) "R")(rightTwist)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
+       (else (makeMove moves)
+             (write-file "reverse.txt" (~a (string-append* (cddr moves)))))
+    )
+  )
+
+(define (invertMove move)
+  (cond((equal? "I" move) "D")
+       ((equal? "D" move) "I")
+       ((equal? "A" move) "B")
+       ((equal? "B" move) "A")
+    )
+  )
 
 (send mainFrame show #t)
