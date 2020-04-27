@@ -176,7 +176,7 @@
 (define moveButton (new button%
                     (parent movesRow)
                     (label "Mover")
-                    [callback (lambda (button event) (makeMove (splitMove (send movesField get-value))))]
+                    [callback (lambda (button event) (makeMove (cdr (splitMove (send movesField get-value)))))]
                     [font (menuFont 20)]))
 ;Columna para girar las diferentes caras del cubo
 (define turnLabel (new message%
@@ -220,7 +220,6 @@
 
 ;;Realiza la modificación del cubo que el usuario decidió hacer
  (define (makeMove move)
-   (print (cadr move))
    (rotate (string->number (car move)) (cadr move))
    (windowUpdater)
    )

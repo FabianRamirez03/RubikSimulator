@@ -46,10 +46,10 @@
 ;**************************************** giro **********************************
 
 (define (rotate num dir)
-  (cond ((equal? dir "U") (write-file "Logic/cube.txt" (~a (turn (changeCallC (stringtolistCube (read-1strings "Logic/cube.txt") '()) (sortCube (verticalRead (stringtolistCube (read-1strings "Logic/cube.txt") '()) num) '(5 1 2 4)) num '(1 2 4 5))))))
-        ((equal? dir "D") (write-file "Logic/cube.txt" (~a (turn (changeCallC (stringtolistCube (read-1strings "Logic/cube.txt") '()) (sortCube (verticalRead (stringtolistCube (read-1strings "Logic/cube.txt") '()) num) '(2 4 5 1)) num '(1 2 4 5))))))
-        ((equal? dir "L") (write-file "Logic/cube.txt" (~a (turn (changeCallR (stringtolistCube (read-1strings "Logic/cube.txt") '()) (sortCube (horizontalRead (stringtolistCube (read-1strings "Logic/cube.txt") '()) num) '(3 4 6 1)) num '(1 3 4 6))))))
-        ((equal? dir "R") (write-file "Logic/cube.txt" (~a (turn (changeCallR (stringtolistCube (read-1strings "Logic/cube.txt") '()) (sortCube (horizontalRead (stringtolistCube (read-1strings "Logic/cube.txt") '()) num) '(6 1 3 4)) num '(1 3 4 6))))))
+  (cond ((equal? dir "A") (write-file "Logic/cube.txt" (~a (turn (changeCallC (stringtolistCube (read-1strings "Logic/cube.txt") '()) (sortCube (verticalRead (stringtolistCube (read-1strings "Logic/cube.txt") '()) num) '(5 1 2 4)) num '(1 2 4 5))))))
+        ((equal? dir "B") (write-file "Logic/cube.txt" (~a (turn (changeCallC (stringtolistCube (read-1strings "Logic/cube.txt") '()) (sortCube (verticalRead (stringtolistCube (read-1strings "Logic/cube.txt") '()) num) '(2 4 5 1)) num '(1 2 4 5))))))
+        ((equal? dir "I") (write-file "Logic/cube.txt" (~a (turn (changeCallR (stringtolistCube (read-1strings "Logic/cube.txt") '()) (sortCube (horizontalRead (stringtolistCube (read-1strings "Logic/cube.txt") '()) num) '(3 4 6 1)) num '(1 3 4 6))))))
+        ((equal? dir "D") (write-file "Logic/cube.txt" (~a (turn (changeCallR (stringtolistCube (read-1strings "Logic/cube.txt") '()) (sortCube (horizontalRead (stringtolistCube (read-1strings "Logic/cube.txt") '()) num) '(6 1 3 4)) num '(1 3 4 6))))))
         (else #f)
         )
   )
