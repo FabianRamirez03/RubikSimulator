@@ -8,20 +8,15 @@
 (include "Logic/cubeDrawer.rkt")
 (include "Logic/CreacionGrafos.rkt")
 
-
-; Load images
-(define blackBackGround (make-object bitmap% "Assets/blackBackground.png"))
-(define logo (make-object bitmap% "Assets/logo.png"))
-
-
 ;;Fuentes
 (define (titleFont size)  (make-object font% size 'modern 'normal 'bold))
 (define (menuFont size)  (make-object font% size 'swiss 'normal 'bold))
 
-;;Main Window Structure  _________________________________________________________________________
+;;______________________________________Estructura de la ventana principal___________________________________________
+
+;Panel principal
 (define mainFrame (new frame%
                        [label "Rubik Simulator"]
-                       [width 1100]
                        [height 600]
                        [x 60]
                        [y 20]
@@ -103,14 +98,14 @@
 ;;;;espacio inferior para centrar el resto del contenido
 
 
-;;Canvas Drawers________________________________________________________
+;;_____________________Funciones que dibujan el cubo en el canvas________________________________________________________
 
-; Draws menu elements in canvas
+; Dubuja el cubo en el canvas
 (define (drawCube canvas dc)
   (send dc set-scale 2 2)
-  (send dc draw-bitmap  (cubeBitMap2 (stringtolistCube  (read-1strings "Logic/cube.txt") '())) 0 0)
+  (send dc draw-bitmap  (cubeBitMap (stringtolistCube  (read-1strings "Logic/cube.txt") '())) 0 0)
 )
-
+;Hace la conversión de figura 3D a bitMap
 (define canvasCubeBitMap
   (new canvas% [parent cubeColumn]
                [paint-callback drawCube]
@@ -123,12 +118,13 @@
 (define title(new message% 	[label "Rubik Simulator"]	 
    	 	[parent titlePanel]
                 [font (titleFont 50)]))
-;;Boton para un nuevo juego
+;;Campo para definir de que dimensiones quiere el nuevo cubo
 (define newGameField (new text-field%
                         (label "Nuevo Juego:")
                         (parent topBlankRow)
                         (init-value "Dimensión")
                         [font (menuFont 20)]))
+;Boron para iniciar el nuevo juego 
 (define newGameButton (new button%
                     (parent topBlankRow)
                     (label "Iniciar")
@@ -158,27 +154,49 @@
                 [label "Girar:"]	 
    	 	[parent rotationRow]
                 [font (menuFont 20)]))
-;;Botones para girar el cubo
+
+
+;;________________Botones para girar el cubo___________________________
+
+
+;Gira el cubo hacia arriba
 (define turnUpButton (new button%
                     (parent rotationRow)
                     (label "Arriba")
                     [callback (lambda (button event) (upTwist))]
                     [font (menuFont 20)]))
+
+;Gira el cubo hacia abajo
 (define turnDownButton (new button%
                     (parent rotationRow)
                     (label "Abajo")
                     [callback (lambda (button event) (downTwist))]
                     [font (menuFont 20)]))
+
+;Gira el cubo hacia la derecha
 (define turnRightButton (new button%
                     (parent rotationRow)
                     (label "Derecha")
                     [callback (lambda (button event) (rightTwist))]
                     [font (menuFont 20)]))
+
+;Gira el cubo hacia la izquierda
 (define turnLeftButton (new button%
                     (parent rotationRow)
                     (label "Izquierda")
                     [callback (lambda (button event) (leftTwist))]
                     [font (menuFont 20)]))
+
+
+;________________________________________________________________________FUNCIONES LÓGICAS_____________________________________________________________________-
+
+
+
+
+
+
+;______________________________Actualiza el estado de la ventana principal____________________________
+
 
 ;;Actualiza el nuevo juego con un cubo con una nueva dimension
 (define (newGameUpdate)
@@ -229,13 +247,15 @@
   )
 (define (reverseAux moves)
   (cond((equal? (car moves) "V")#f)
-       ((equal? (cadr moves) "U")(upTwist)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
-       ((equal? (cadr moves) "D")(downTwist)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
-       ((equal? (cadr moves) "L")(leftTwist)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
-       ((equal? (cadr moves) "R")(rightTwist)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
-       (else (makeMove moves)
+       ((equal? (cadr moves) "U")(girar "U")(windowUpdater)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
+       ((equal? (cadr moves) "D")(girar "D")(windowUpdater)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
+       ((equal? (cadr moves) "L")(girar "L")(windowUpdater)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
+       ((equal? (cadr moves) "R")(girar "R")(windowUpdater)(write-file "reverse.txt" (~a (string-append* (cddr moves)))))
+       (else (rotate (string->number (car moves)) (cadr moves))
+             (windowUpdater)
              (write-file "reverse.txt" (~a (string-append* (cddr moves)))))
     )
+  
   )
 ;Invierte el movimiento realizado para regresar al punto inicial
 (define (invertMove move)

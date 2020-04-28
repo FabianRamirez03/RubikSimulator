@@ -22,18 +22,18 @@
 (define (cubeMatrix matrix)
      (parameterize ([current-pict3d-background  (rgba 240 240 240 1)])
      (combine
-           (frontFace2 (car matrix) -1 1)
-           (rightFace2 (caddr matrix) 0 1 (lengthList (cadr matrix)))
-           (topFace2 (cadr matrix) -1 (* -1 (- (lengthList (caddr matrix)) 1)) (lengthList (caddr matrix)))
+           (frontFace (car matrix) -1 1)
+           (rightFace (caddr matrix) 0 1 (lengthList (cadr matrix)))
+           (topFace (cadr matrix) -1 (* -1 (- (lengthList (caddr matrix)) 1)) (lengthList (caddr matrix)))
            (blackLines (lengthList (car matrix)))
            ;;(basis 'camera (point-at (pos 0.5 0.5 0.5) (pos -0.1 0.13 -0.2)))
            (light (pos 1 1 1)))))
 
 
 ;;Dibuja cara frontal________________________________________________________________________________________________________________________________________
-(define (frontFace2 lista width height)
+(define (frontFace lista width height)
   (cond((null? lista) lista)
-        (else (combine (rowFrontAux (car lista) width height) (frontFace2 (cdr lista) -1 (- height 1)))
+        (else (combine (rowFrontAux (car lista) width height) (frontFace (cdr lista) -1 (- height 1)))
          )
   )
 )
@@ -47,9 +47,9 @@
 
 ;;Dibuja cara lateral________________________________________________________________________________________________________________________________________
 
-(define (rightFace2 lista deep height dim)
+(define (rightFace lista deep height dim)
   (cond((null? lista) lista)
-        (else (combine (rowRightAux (car lista) deep height dim) (rightFace2 (cdr lista) 0 (- height 1) dim))
+        (else (combine (rowRightAux (car lista) deep height dim) (rightFace (cdr lista) 0 (- height 1) dim))
          )
   )
 )
@@ -62,9 +62,9 @@
 
 ;;Dibuja cara superior________________________________________________________________________________________________________________________________________
 
-(define (topFace2 lista width deep dim)
+(define (topFace lista width deep dim)
   (cond((null? lista) lista)
-        (else (combine (rowTopAux (car lista) width deep dim)(topFace2 (cdr lista) -1 (+ 1 deep) dim))
+        (else (combine (rowTopAux (car lista) width deep dim)(topFace (cdr lista) -1 (+ 1 deep) dim))
          )
   )
 )
@@ -105,7 +105,7 @@
 )
 
 ;;Crea el bitmap a partir de la pict3D________________________________________________________
-(define (cubeBitMap2 matrix)(parameterize ([current-pict3d-background  (rgba 240 240 240 1)])
+(define (cubeBitMap matrix)(parameterize ([current-pict3d-background  (rgba 240 240 240 1)])
     (pict3d->bitmap
      (combine (cubo matrix)
               (light (pos 1 1 1))))))
