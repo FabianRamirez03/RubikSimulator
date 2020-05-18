@@ -200,7 +200,7 @@
 
 ;;Actualiza el nuevo juego con un cubo con una nueva dimension
 (define (newGameUpdate)
-  (create (string->number(send newGameField get-value)))
+  (create (verifyDimension(string->number(send newGameField get-value))))
   (write-file "reverse.txt" (~a "V"))
   (windowUpdater)
   )
@@ -263,6 +263,7 @@
        ((equal? "D" move) "I")
        ((equal? "A" move) "B")
        ((equal? "B" move) "A")
+       (else "")
     )
   )
 ;Escribe en giro del cubo en el txt en caso de regresar el movimiente
@@ -272,7 +273,17 @@
        ((equal? "D" dir) (write-file "reverse.txt" (~a (string-append* "0" "U" (file->lines "reverse.txt")))))
        ((equal? "L" dir) (write-file "reverse.txt" (~a (string-append* "0" "R" (file->lines "reverse.txt")))))
        ((equal? "R" dir) (write-file "reverse.txt" (~a (string-append* "0" "L" (file->lines "reverse.txt")))))
+       (else "")
     )
   )
+;Verifica que el numero de dimensiones para un nuevo juego sea mayor a 1 y menor que 10
+(define (verifyDimension dimension)
+  (cond((number? dimension)
+        (cond((< dimension 2)2)
+             ((> dimension 10)10)
+             (else dimension))
+        )
+       (else 3)
+))
 
 (send mainFrame show #t)
